@@ -17,3 +17,12 @@ pub struct Post {
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct CreatePostReq {
+    pub space_id: Uuid,
+    pub title: String,
+    pub content: Option<String>,
+    pub media_url: Option<String>,
+    pub media_type: Option<String>,
+}

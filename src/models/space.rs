@@ -19,3 +19,9 @@ pub struct SpaceMember {
     pub role: Option<String>,
     pub joined_at: DateTime<Utc>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct CreateSpaceReq {
+    pub name: String,
+    pub description: Option<String>,
+}

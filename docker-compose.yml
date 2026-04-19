@@ -12,5 +12,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  api:
+    build: .
+    container_name: swd_api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DATABASE_URL=postgres://${DB_USER:-postgres}:${DB_PASS:-password}@db:5432/${DB_NAME:-sawasdee_db}
+      - JWT_SECRET=${JWT_SECRET:-my_super_secret_jwt_key_for_dev}
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - db
+
 volumes:
   postgres_data:
