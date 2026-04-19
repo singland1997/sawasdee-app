@@ -6,6 +6,8 @@ CREATE TABLE users (
     password_hash TEXT NOT NULL,
     bio TEXT,
     avatar_url TEXT,
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
+    is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

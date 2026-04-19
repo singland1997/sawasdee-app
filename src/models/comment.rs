@@ -10,5 +10,12 @@ pub struct Comment {
     pub author_id: Uuid,
     pub parent_id: Option<Uuid>,
     pub content: String,
+    pub upvote_count: i32,
     pub created_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CreateCommentReq {
+    pub parent_id: Option<Uuid>,
+    pub content: String,
 }
