@@ -1,13 +1,13 @@
-use anyhow::{anyhow, Result};
-use axum::extract::State;
-use axum::http::StatusCode;
-use axum::Json;
 use crate::errors::AppError;
 use crate::middleware::auth::AuthUser;
 use crate::models::user::{AuthResponse, LoginUserReq, RegisterUserReq, User, UserResponse};
 use crate::state::AppState;
 use crate::utils::jwt::generate_token;
 use crate::utils::password::{hash_password, verify_password};
+use anyhow::{Result, anyhow};
+use axum::Json;
+use axum::extract::State;
+use axum::http::StatusCode;
 
 pub async fn get_users(
     State(state): State<AppState>,
@@ -15,9 +15,7 @@ pub async fn get_users(
 ) -> Result<(StatusCode, Json<Vec<User>>), AppError> {
     tracing::info!("User {} is requesting the user list", user.user_id);
 
-    let users = sqlx::query_as::<_, User>(
-        "SELECT * FROM users"
-    )
+    let users = sqlx::query_as::<_, User>("SELECT * FROM users")
         .fetch_all(&state.db)
         .await?;
 
@@ -37,17 +35,17 @@ pub async fn register_user(
         RETURNING id, username, email, created_at
         "#,
     )
-        .bind(&payload.username)
-        .bind(&payload.email)
-        .bind(&password_hash)
-        .fetch_one(&state.db)
-        .await
-        .map_err(|e| match e {
-            sqlx::Error::Database(db_err) if db_err.is_unique_violation() => {
-                AppError::Conflict("Username or email already exists".into())
-            }
-            e => AppError::from(e),
-        })?;
+    .bind(&payload.username)
+    .bind(&payload.email)
+    .bind(&password_hash)
+    .fetch_one(&state.db)
+    .await
+    .map_err(|e| match e {
+        sqlx::Error::Database(db_err) if db_err.is_unique_violation() => {
+            AppError::Conflict("Username or email already exists".into())
+        }
+        e => AppError::from(e),
+    })?;
 
     tracing::info!("New user registered with Argon2: {}", user.username);
     Ok((StatusCode::CREATED, Json(user)))
@@ -57,9 +55,7 @@ pub async fn login_user(
     State(state): State<AppState>,
     Json(payload): Json<LoginUserReq>,
 ) -> Result<(StatusCode, Json<AuthResponse>), AppError> {
-    let user = sqlx::query_as::<_, User>(
-        "SELECT * FROM users WHERE email = $1"
-    )
+    let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE email = $1")
         .bind(&payload.email)
         .fetch_one(&state.db)
         .await

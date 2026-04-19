@@ -1,5 +1,5 @@
-use axum::http::StatusCode;
 use axum::Json;
+use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use serde_json::json;
 use thiserror::Error;
@@ -36,14 +36,14 @@ impl IntoResponse for AppError {
                 tracing::error!(%err, "Database error occurred");
                 (
                     StatusCode::INTERNAL_SERVER_ERROR,
-                    "Something went wrong with the database".to_string()
+                    "Something went wrong with the database".to_string(),
                 )
             }
             AppError::Anyhow(err) => {
                 tracing::error!(%err, "Unexpected error occurred");
                 (
                     StatusCode::INTERNAL_SERVER_ERROR,
-                    "An internal server error occurred".to_string()
+                    "An internal server error occurred".to_string(),
                 )
             }
         };

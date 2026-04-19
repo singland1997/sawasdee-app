@@ -1,6 +1,6 @@
+use anyhow::Result;
 use sqlx::PgPool;
 use sqlx::postgres::PgPoolOptions;
-use anyhow::Result;
 
 pub async fn setup_pool(database_url: &str) -> Result<PgPool> {
     let pool = PgPoolOptions::new()
@@ -9,9 +9,7 @@ pub async fn setup_pool(database_url: &str) -> Result<PgPool> {
         .await?;
 
     tracing::info!("Running database migrations...");
-    sqlx::migrate!("./migrations")
-        .run(&pool)
-        .await?;
+    sqlx::migrate!("./migrations").run(&pool).await?;
     tracing::info!("Migrations applied successfully!");
 
     Ok(pool)
