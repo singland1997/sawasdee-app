@@ -19,7 +19,7 @@ pub fn build_router(state: AppState) -> Router {
         .nest("/posts", post_routes())
         .nest("/comments", comment_routes())
         .nest("/media", media_routes())
-        .nest_service("/uploads", ServeDir::new("uploads"))
+        .nest_service("/uploads", ServeDir::new("../../uploads"))
         .with_state(state)
 }
 
